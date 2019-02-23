@@ -6,51 +6,52 @@ var myHtmlBody = document.getElementsByTagName("body")[0];
 
 var animal = ["Dog", "Cat", "Horse", "Lion", "Tiger", "Wolf"];     // An array of animals
 
-for ( var i = 0; i < animal.length; i++){
+for (var i = 0; i < animal.length; i++){
     var btn = document.createElement("button");                                        // Create a <button element>
     btn.innerHTML = animal[i];                                                         // Name the button with animal name
-    myHtmlBody.appendChild(btn);       
-    btn.addEventListener("click", test);
+    myHtmlBody.appendChild(btn);                                                       // Add the button to the HTML body
+    btn.addEventListener("click", getFromApi);                                         // Add an event listener.  When user clicks, the function getFromApi is called.
 }
 // Create a for loop for the length of the array to display the different animals as buttons
-function test(){ 
-//for (var i = 0; i < animal.length; i++) {                                                  // The for loop will repeat the length of the animals array
-    // var btn = document.createElement("button");                                        // Create a <button element>
-    // btn.innerHTML = animal[i];                                                         // Name the button with animal name
-    // myHtmlBody.appendChild(btn);                                                       // Add the button to the HTML body
-    // btn.addEventListener ("click", function() {                                        // Add a "click" event listener to the button
-        console.log(this);
-        // Use jQuery from here:
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-        this.textContent + "&api_key=9rqYZE6HplBHPqKeUBfUFVboSn02keof";
+function getFromApi(){
 
-        $.ajax({
-        url: queryURL,
-        method: "GET"
+        console.log(this);
+        
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        this.textContent + "&api_key=9rqYZE6HplBHPqKeUBfUFVboSn02keof";         // *** this.textContent is KEY TO GETTING THE FUNCTION TO WORK PROPERLY!!!!!!
+                                                                                // this is referring to the button (btn) - see above code. 
+                                                                                // textContent is calling the text that is inside each button
+                                                                                // for example in the first button: <button>Dog</button> , the textContent within the button tags is "Dog"
+
+        // Use jQuery from here:
+        $.ajax({                                                                // Calling the Ajax
+        url: queryURL,                                                          // the url is referencing the above URL listed in the variable
+        method: "GET"                                                           // The retrieval method of the data is GET
         }).then(function(response) {
 
             console.log(response);
 
             var results = response.data
 
-            for (var i = 0; i < 10; i++) {      // Limit the for loop to 10 images
+            for (var i = 0; i < 10; i++) {                                      // Limit the for loop to 10 images
 
-                var animalDiv = $("<div>");
+                var animalDiv = $("<div>");                                     // Create a div
                 
-                var p = $("<p>");
-                p.text("Rating: " + results[i].rating);
+                var p = $("<p>");                                               // Create a p (paragraph)
+                p.text("Rating: " + results[i].rating);                         // Inside the p, put in the text "Rating: " + result[i].rating
 
-                var animalImage = $("<img>");
-                animalImage.attr("src", results[i].images.fixed_height.url);
+                var animalImage = $("<img>");                                   // Create an image container
+                animalImage.attr("src", results[i].images.fixed_height.url);    // Add the attribute src (source) that references the image URL
                 
-                animalDiv.append(p);
-                animalDiv.append(animalImage);
+                animalDiv.append(p);                                            // Add p to the animalDiv
+                animalDiv.append(animalImage);                                  // Add the animalImage to the animalDiv also
 
-                $("#gifs-appear-here").prepend(animalDiv);
+                $("#gifs-appear-here").prepend(animalDiv);                      // Add to the beginning (prepend) the animalDiv to the id=gifs-appear-here
 
             }
 
         });    
+
 }
 
 
