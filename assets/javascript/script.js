@@ -89,8 +89,18 @@ function getFromApi(){
                 paragraphForRating.text("Rating: " + results[i].rating);        // Inside the p, put in the text "Rating: " + result[i].rating
 
                 var gifImage = $("<img>");                                      // Create an image container
+
+
+
+                // If wanting still image use the following line of code
+                //gifImage.attr("src", results[i].images.fixed_height_still.url);  
+                // **** Need to find a way to have the still image show first, then when the user clicks the gif, the animation loads and plays ****
+
+                // If wanting animated image use the following line of code
                 gifImage.attr("src", results[i].images.fixed_height.url);       // Add the attribute src (source) that references the image URL
-                
+
+
+
                 gifDiv.append(paragraphForRating);                              // Add paragraphForRating to the gifDiv
                 gifDiv.append(gifImage);                                        // Add the gifImage to the gifDiv also
 
