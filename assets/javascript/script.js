@@ -1,52 +1,70 @@
 console.log("JavaScript is connected!");
 
-// Create a variable that references the html body (so that we can add the buttons to this further down in the script)
-var myHtmlBody = document.getElementsByTagName("body")[0];
+
+
+var predefinedKeyword = ["Dog", "Cat", "Horse", "Lion", "Tiger", "Wolf"];       // Array of predefined keywords set by the app
 
 
 
-var animal = ["Dog", "Cat", "Horse", "Lion", "Tiger", "Wolf"];     // An array of animals
+// ----------------------------------------
+// FOR LOOP TO CREATE BUTTONS FOR THE LENGTH OF THE ABOVE PREDEFINED KEYWORDS ARRAY
+
+for (var i = 0; i < predefinedKeyword.length; i++){
+    var btn = document.createElement("button");                     // Create a <button element>
+    btn.innerHTML = predefinedKeyword[i];                           // Name the button with predefinedKeyword name
+    document.body.appendChild(btn);                                 // Add the button to the HTML body
+    btn.addEventListener("click", getFromApi);                      // Add an event listener.  When user clicks, the function getFromApi is called.
+}
 
 
 
-
+// ----------------------------------------
+// USER SEARCH AND ADD NEW BUTTON
 
 // Input Box
-var inputBox = document.createElement("input");     // Create <input> element
-inputBox.setAttribute("type", "text");              // Set Attribute for inputBox to have type="text"
-inputBox.setAttribute("class", "userInput1");       // Set Attribute for inputBox to have class="userInput1"
-document.body.appendChild(inputBox);                // Append inputBox to body of page
+var inputBox = document.createElement("input");                     // Create <input> element
+inputBox.setAttribute("type", "text");                              // Set Attribute for inputBox to have type="text"
+inputBox.setAttribute("class", "userInput1");                       // Set Attribute for inputBox to have class="userInput1"
+document.body.appendChild(inputBox);                                // Append inputBox to body of page
 
 
-// Button to add user input in Input Box to the animal array
-var inputButton = document.createElement("button");         // Create <button> element
-inputButton.setAttribute("class", "userInputButton");       // Set Attribute for inputButton to have class="userInputButton"
-var inputButtonText = document.createTextNode("Add");  // Create a text node 
-inputButton.appendChild(inputButtonText);                   // Append the text to inputButton
-document.body.appendChild(inputButton);                     // Append inputButton to body of page
- 
+// Button to submit user input text that was typed into the input box.  When the user clicks inputButton, the function createNewButton is called
+var inputButton = document.createElement("button");                 // Create <button> element
+inputButton.setAttribute("class", "userInputButton");               // Set Attribute for inputButton to have class="userInputButton"
+var inputButtonText = document.createTextNode("Add New Keyword");   // Create a text node 
+inputButton.appendChild(inputButtonText);                           // Append the text to inputButton
+document.body.appendChild(inputButton);                             // Append inputButton to body of page
+inputButton.addEventListener("click", createNewButton);             // Add an event listener.  When user clicks, the function addToArray is called.
 
 
+// Function to create new button
+function createNewButton() {
+    var inputText = document.getElementsByClassName("userInput1")[0].value;         // .value is what the user typed into the input box
+    console.log(inputText);
+    
+    //predefinedKeyword.push(inputText);                            // Push inputText to the initial array of predefined keywords
+    //console.log(predefinedKeyword);                               // This checks that the predefined keywords array has been updated with the user input.
+                                                                    // **** Strictly speaking, the above two lines are not doing much so have been commented out
 
-
-
-
-
-for (var i = 0; i < animal.length; i++){
-    var btn = document.createElement("button");                                 // Create a <button element>
-    btn.innerHTML = animal[i];                                                  // Name the button with animal name
-    myHtmlBody.appendChild(btn);                                                // Add the button to the HTML body
-    btn.addEventListener("click", getFromApi);                                  // Add an event listener.  When user clicks, the function getFromApi is called.
-    inputButton.addEventListener("click", addToArray);  
+    var newUserBtn = document.createElement("button");                              // Create <button> element
+    newUserBtn.setAttribute("class", "newButton");                                  // Set Attribute for inputButton to have class="userInputButton"
+    newUserBtn.innerHTML = inputText;                                               // inputText will be the text that appears inside newUserBtn
+    document.getElementsByClassName("newUserButtons")[0].appendChild(newUserBtn);   // Append inputButton to body of page
+    newUserBtn.addEventListener("click", getFromApi);                               // Add an event listener. When user clicks, the function addToArray is called.
 }
-// Create a for loop for the length of the array to display the different animals as buttons
+
+
+
+// ----------------------------------------
+// FUNCTION TO CALL API
+
 function getFromApi(){
 
         // Use jQuery from here:
 
         console.log(this);
         
-        $("#gifs-appear-here").empty();                                         // Empty the div id=gifs-appear-here
+        $("#gifsAppearHere").empty();                                           // Empty the div id=gifs-appear-here
 
         var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
         this.textContent + "&api_key=9rqYZE6HplBHPqKeUBfUFVboSn02keof";         // *** this.textContent is KEY TO GETTING THE FUNCTION TO WORK PROPERLY!!!!!!
@@ -61,22 +79,22 @@ function getFromApi(){
 
             console.log(response);
 
-            var results = response.data
+            var results = response.data                                         // results is the data property of the response
 
             for (var i = 0; i < 10; i++) {                                      // Limit the for loop to 10 images
 
-                var animalDiv = $("<div>");                                     // Create a div
+                var gifDiv = $("<div>");                                        // Create a div
                 
-                var p = $("<p>");                                               // Create a p (paragraph)
-                p.text("Rating: " + results[i].rating);                         // Inside the p, put in the text "Rating: " + result[i].rating
+                var paragraph = $("<p>");                                       // Create a p (paragraph)
+                paragraph.text("Rating: " + results[i].rating);                 // Inside the p, put in the text "Rating: " + result[i].rating
 
-                var animalImage = $("<img>");                                   // Create an image container
-                animalImage.attr("src", results[i].images.fixed_height.url);    // Add the attribute src (source) that references the image URL
+                var gifImage = $("<img>");                                      // Create an image container
+                gifImage.attr("src", results[i].images.fixed_height.url);       // Add the attribute src (source) that references the image URL
                 
-                animalDiv.append(p);                                            // Add p to the animalDiv
-                animalDiv.append(animalImage);                                  // Add the animalImage to the animalDiv also
+                gifDiv.append(paragraph);                                       // Add p to the gifDiv
+                gifDiv.append(gifImage);                                        // Add the gifImage to the gifDiv also
 
-                $("#gifs-appear-here").prepend(animalDiv);                      // Add to the beginning (prepend) the animalDiv to the id=gifs-appear-here
+                $("#gifsAppearHere").prepend(gifDiv);                           // Add to the beginning (prepend) the gifDiv to the id=gifs-appear-here
 
             }
 
@@ -86,23 +104,7 @@ function getFromApi(){
 
 
 
+// append and prepend definition:
 
-
-
-function addToArray() {
-    var inputText = document.getElementsByClassName("userInput1")[0].value;
-    console.log(inputText);
-    animal.push(inputText);
-    console.log(animal)
-
-
-    btn.innerHTML = animal[i];                                                  // Name the button with animal name
-    $("#buttons-appear-here").append(btn); 
-    
-                                             // Add the button to the HTML body
-}
-
-    // append and prepend definition:
-
-    // append:	add (something) as an attachment or supplement
-    // prepend:	add (something) to the beginning of something else
+// append:	add (something) as an attachment or supplement
+// prepend:	add (something) to the beginning of something else
