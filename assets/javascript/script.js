@@ -34,7 +34,7 @@ inputButton.setAttribute("class", "userInputButton");               // Set Attri
 var inputButtonText = document.createTextNode("Add New Keyword");   // Create a text node 
 inputButton.appendChild(inputButtonText);                           // Append the text to inputButton
 document.body.appendChild(inputButton);                             // Append inputButton to body of page
-inputButton.addEventListener("click", createNewButton);             // Add an event listener.  When user clicks, the function addToArray is called.
+inputButton.addEventListener("click", createNewButton);             // Add an event listener.  When user clicks, the function createNewButton is called.
 
 
 // Function to create new button
@@ -47,10 +47,10 @@ function createNewButton() {
                                                                     // **** Strictly speaking, the above two lines are not doing much so have been commented out
 
     var newUserBtn = document.createElement("button");                              // Create <button> element
-    newUserBtn.setAttribute("class", "newButton");                                  // Set Attribute for inputButton to have class="userInputButton"
+    newUserBtn.setAttribute("class", "newButton");                                  // Set Attribute for inputButton to have class="newButton"
     newUserBtn.innerHTML = inputText;                                               // inputText will be the text that appears inside newUserBtn
-    document.getElementsByClassName("newUserButtons")[0].appendChild(newUserBtn);   // Append inputButton to body of page
-    newUserBtn.addEventListener("click", getFromApi);                               // Add an event listener. When user clicks, the function addToArray is called.
+    document.getElementsByClassName("newUserButtons")[0].appendChild(newUserBtn);   // Append newUserBtn to class="newUserButtons"
+    newUserBtn.addEventListener("click", getFromApi);                               // Add an event listener. When user clicks, the function getFromApi is called.
 }
 
 
@@ -64,11 +64,11 @@ function getFromApi(){
 
         console.log(this);
         
-        $("#gifsAppearHere").empty();                                           // Empty the div id=gifs-appear-here
+        $(".gifsAppearHere").empty();                                           // Empty the div class=gifsAppearHere
 
         var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
         this.textContent + "&api_key=9rqYZE6HplBHPqKeUBfUFVboSn02keof";         // *** this.textContent is KEY TO GETTING THE FUNCTION TO WORK PROPERLY!!!!!!
-                                                                                // this is referring to the button (btn) - see above code. 
+                                                                                // this is referring to the either: btn or: newUserBtn depending on which button on the page is clicked - see above code. 
                                                                                 // textContent is calling the text that is inside each button
                                                                                 // for example in the first button: <button>Dog</button> , the textContent within the button tags is "Dog"
 
@@ -85,16 +85,16 @@ function getFromApi(){
 
                 var gifDiv = $("<div>");                                        // Create a div
                 
-                var paragraph = $("<p>");                                       // Create a p (paragraph)
-                paragraph.text("Rating: " + results[i].rating);                 // Inside the p, put in the text "Rating: " + result[i].rating
+                var paragraphForRating = $("<p>");                              // Create a p (paragraph)
+                paragraphForRating.text("Rating: " + results[i].rating);        // Inside the p, put in the text "Rating: " + result[i].rating
 
                 var gifImage = $("<img>");                                      // Create an image container
                 gifImage.attr("src", results[i].images.fixed_height.url);       // Add the attribute src (source) that references the image URL
                 
-                gifDiv.append(paragraph);                                       // Add p to the gifDiv
+                gifDiv.append(paragraphForRating);                              // Add paragraphForRating to the gifDiv
                 gifDiv.append(gifImage);                                        // Add the gifImage to the gifDiv also
 
-                $("#gifsAppearHere").prepend(gifDiv);                           // Add to the beginning (prepend) the gifDiv to the id=gifs-appear-here
+                $(".gifsAppearHere").prepend(gifDiv);                           // Add to the beginning (prepend) the gifDiv to the class=gifsAppearHere
 
             }
 
