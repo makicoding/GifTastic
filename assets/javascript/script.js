@@ -92,12 +92,22 @@ function getFromApi(){
 
 
 
-                // If wanting still image use the following line of code
-                //gifImage.attr("src", results[i].images.fixed_height_still.url);  
-                // **** Need to find a way to have the still image show first, then when the user clicks the gif, the animation loads and plays ****
+                    // ----------------------------------------
+                    // Retrieve still image to display that first
+                    gifImage.attr("src", results[i].images.fixed_height_still.url);             // Add the attribute src (source) that references the image URL 
+                    
+                    // Assign data- attributes to the gif image
+                    gifImage.attr("data-still", results[i].images.fixed_height_still.url);      // Add the data- attribute called data-still (set attribute) that references the still URL for the gif
+                    gifImage.attr("data-animated", results[i].images.fixed_height.url);         // Add the data- attribute called data-animated (set attribute) that references the animated URL for the gif
+                    gifImage.attr("data-state", "still");                                       // Add the data- attribute called data-state (set attribute) and assign the image with the string "still"
+                    gifImage.attr("class", "gifIcon");                                          // Add an attribute class="gifIcon"
+                    
+                    // ----------------------------------------
 
-                // If wanting animated image use the following line of code
-                gifImage.attr("src", results[i].images.fixed_height.url);       // Add the attribute src (source) that references the image URL
+
+
+                // If retrieving just animated image use the following line of code
+                // gifImage.attr("src", results[i].images.fixed_height.url);    // Add the attribute src (source) that references the image URL
 
 
 
@@ -107,6 +117,27 @@ function getFromApi(){
                 $(".gifsAppearHere").prepend(gifDiv);                           // Add to the beginning (prepend) the gifDiv to the class=gifsAppearHere
 
             }
+
+
+            
+            // ----------------------------------------
+            // Start / Stop animation functionality when user clicks .The pause functionality 
+            $(".gifIcon").on("click", function() {                              // When the user clicks class="gifIcon", function is executed
+                var gifState = $(this).attr("data-state");                      // Get attribute data-state from class="gifIcon" and store it into a variable called "gifState"
+                
+                if (gifState === "still") {                                     // If gifState is equal to the string "still", then...
+                $(this).attr("src", $(this).attr("data-animated"));             // Get attribute data-animated from class="gifIcon", Set attribute source (src) of class="gifIcon" to be animated URL retrieved from data-animated
+                $(this).attr("data-state", "animated");                         // Set attribute data-state of class="gifIcon" to be the string "animated"
+                } 
+
+                else {                                                          // Otherwise...
+                $(this).attr("src", $(this).attr("data-still"));                // Get attribute data-still from class="gifIcon", Set attribute source (src) of class="gifIcon" to be still URL retrieved from data-still
+                $(this).attr("data-state", "still");                            // Set attribute data-state of class="gifIcon" to be the string "still"
+                }
+            });
+
+            // ----------------------------------------     
+
 
         });    
 
